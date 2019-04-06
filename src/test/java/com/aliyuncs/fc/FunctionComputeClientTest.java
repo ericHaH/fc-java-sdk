@@ -58,6 +58,7 @@ import com.aliyuncs.fc.request.GetAliasRequest;
 import com.aliyuncs.fc.request.GetCustomDomainRequest;
 import com.aliyuncs.fc.request.GetFunctionCodeRequest;
 import com.aliyuncs.fc.request.GetFunctionRequest;
+import com.aliyuncs.fc.request.GetProvisionConfigRequest;
 import com.aliyuncs.fc.request.GetServiceRequest;
 import com.aliyuncs.fc.request.GetTriggerRequest;
 import com.aliyuncs.fc.request.HttpInvokeFunctionRequest;
@@ -65,10 +66,12 @@ import com.aliyuncs.fc.request.InvokeFunctionRequest;
 import com.aliyuncs.fc.request.ListAliasesRequest;
 import com.aliyuncs.fc.request.ListCustomDomainsRequest;
 import com.aliyuncs.fc.request.ListFunctionsRequest;
+import com.aliyuncs.fc.request.ListProvisionConfigsRequest;
 import com.aliyuncs.fc.request.ListServicesRequest;
 import com.aliyuncs.fc.request.ListTriggersRequest;
 import com.aliyuncs.fc.request.ListVersionsRequest;
 import com.aliyuncs.fc.request.PublishVersionRequest;
+import com.aliyuncs.fc.request.PutProvisionConfigRequest;
 import com.aliyuncs.fc.request.UpdateAliasRequest;
 import com.aliyuncs.fc.request.UpdateCustomDomainRequest;
 import com.aliyuncs.fc.request.UpdateFunctionRequest;
@@ -88,16 +91,19 @@ import com.aliyuncs.fc.response.GetAliasResponse;
 import com.aliyuncs.fc.response.GetCustomDomainResponse;
 import com.aliyuncs.fc.response.GetFunctionCodeResponse;
 import com.aliyuncs.fc.response.GetFunctionResponse;
+import com.aliyuncs.fc.response.GetProvisionConfigResponse;
 import com.aliyuncs.fc.response.GetServiceResponse;
 import com.aliyuncs.fc.response.GetTriggerResponse;
 import com.aliyuncs.fc.response.InvokeFunctionResponse;
 import com.aliyuncs.fc.response.ListAliasesResponse;
 import com.aliyuncs.fc.response.ListCustomDomainsResponse;
 import com.aliyuncs.fc.response.ListFunctionsResponse;
+import com.aliyuncs.fc.response.ListProvisionConfigsResponse;
 import com.aliyuncs.fc.response.ListServicesResponse;
 import com.aliyuncs.fc.response.ListTriggersResponse;
 import com.aliyuncs.fc.response.ListVersionsResponse;
 import com.aliyuncs.fc.response.PublishVersionResponse;
+import com.aliyuncs.fc.response.PutProvisionConfigResponse;
 import com.aliyuncs.fc.response.UpdateAliasResponse;
 import com.aliyuncs.fc.response.UpdateCustomDomainResponse;
 import com.aliyuncs.fc.response.UpdateFunctionResponse;
@@ -2240,6 +2246,57 @@ public class FunctionComputeClientTest {
         DeleteAliasResponse deleteAliasResponse = client
             .deleteAlias(deleteAliasRequest);
         assertEquals(HttpURLConnection.HTTP_NO_CONTENT, deleteAliasResponse.getStatus());
+    }
+
+    @Test
+    public void testProvisionConfig() throws ClientException {
+        String serviceName = "sn";
+        String qualifier = "q";
+        String functionName = "fn";
+        Integer target = 10;
+        Integer current = 0;
+        Integer limit = 2;
+        // Put provision config
+        PutProvisionConfigRequest putProvisionConfigRequest = new PutProvisionConfigRequest(serviceName, qualifier, functionName);
+        putProvisionConfigRequest.setTarget(target);
+        assertEquals(serviceName, putProvisionConfigRequest.getServiceName());
+        assertEquals(qualifier, putProvisionConfigRequest.getQualifier());
+        assertEquals(functionName, putProvisionConfigRequest.getFunctionName());
+        assertEquals(target, putProvisionConfigRequest.getTarget());
+
+        PutProvisionConfigResponse putProvisionConfigResponse = client
+                .putProvisionConfig(putProvisionConfigRequest);
+        assertEquals(HttpURLConnection.HTTP_OK, putProvisionConfigResponse.getStatus());
+        assertEquals("services/" + serviceName + "." + qualifier +"/functions/" + functionName, putProvisionConfigResponse.getResource());
+        assertEquals(target, putProvisionConfigResponse.getTarget());
+        assertEquals(current, putProvisionConfigResponse.getCurrent());
+
+        // Get provision config
+        GetProvisionConfigRequest getProvisionConfigRequest = new GetProvisionConfigRequest(serviceName, qualifier, functionName);
+        assertEquals(serviceName, getProvisionConfigRequest.getServiceName());
+        assertEquals(qualifier, getProvisionConfigRequest.getQualifier());
+        assertEquals(functionName, getProvisionConfigRequest.getFunctionName());
+
+        GetProvisionConfigResponse getProvisionConfigResponse = client
+                .getProvisionConfig(getProvisionConfigRequest);
+        assertEquals(HttpURLConnection.HTTP_OK, getProvisionConfigResponse.getStatus());
+        assertEquals("services/" + serviceName + "." + qualifier +"/functions/" + functionName, getProvisionConfigResponse.getResource());
+        assertEquals(target, getProvisionConfigResponse.getTarget());
+        assertEquals(current, getProvisionConfigResponse.getCurrent());
+
+        // List provision configs
+        ListProvisionConfigsRequest listProvisionConfigsRequest = new ListProvisionConfigsRequest();
+        listProvisionConfigsRequest.setServiceName(serviceName);
+        listProvisionConfigsRequest.setQualifier(qualifier);
+        listProvisionConfigsRequest.setLimit(limit);
+        assertEquals(serviceName, listProvisionConfigsRequest.getServiceName());
+        assertEquals(qualifier, listProvisionConfigsRequest.getQualifier());
+        assertEquals(limit, listProvisionConfigsRequest.getLimit());
+
+        ListProvisionConfigsResponse listProvisionConfigsResponse = client
+                .listProvisionConfigs(listProvisionConfigsRequest);
+        assertEquals(HttpURLConnection.HTTP_OK, listProvisionConfigsResponse.getStatus());
+        assertEquals(1, listProvisionConfigsResponse.getProvisionConfigs().length);
     }
 
     public void testHTTPTriggerWithVersion() throws ClientException, IOException {

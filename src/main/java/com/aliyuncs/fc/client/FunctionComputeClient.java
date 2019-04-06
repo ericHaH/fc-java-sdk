@@ -52,6 +52,7 @@ import com.aliyuncs.fc.request.GetAliasRequest;
 import com.aliyuncs.fc.request.GetCustomDomainRequest;
 import com.aliyuncs.fc.request.GetFunctionCodeRequest;
 import com.aliyuncs.fc.request.GetFunctionRequest;
+import com.aliyuncs.fc.request.GetProvisionConfigRequest;
 import com.aliyuncs.fc.request.GetServiceRequest;
 import com.aliyuncs.fc.request.GetTriggerRequest;
 import com.aliyuncs.fc.request.HttpInvokeFunctionRequest;
@@ -59,10 +60,12 @@ import com.aliyuncs.fc.request.InvokeFunctionRequest;
 import com.aliyuncs.fc.request.ListAliasesRequest;
 import com.aliyuncs.fc.request.ListCustomDomainsRequest;
 import com.aliyuncs.fc.request.ListFunctionsRequest;
+import com.aliyuncs.fc.request.ListProvisionConfigsRequest;
 import com.aliyuncs.fc.request.ListServicesRequest;
 import com.aliyuncs.fc.request.ListTriggersRequest;
 import com.aliyuncs.fc.request.ListVersionsRequest;
 import com.aliyuncs.fc.request.PublishVersionRequest;
+import com.aliyuncs.fc.request.PutProvisionConfigRequest;
 import com.aliyuncs.fc.request.UpdateAliasRequest;
 import com.aliyuncs.fc.request.UpdateCustomDomainRequest;
 import com.aliyuncs.fc.request.UpdateFunctionRequest;
@@ -83,16 +86,19 @@ import com.aliyuncs.fc.response.GetAliasResponse;
 import com.aliyuncs.fc.response.GetCustomDomainResponse;
 import com.aliyuncs.fc.response.GetFunctionCodeResponse;
 import com.aliyuncs.fc.response.GetFunctionResponse;
+import com.aliyuncs.fc.response.GetProvisionConfigResponse;
 import com.aliyuncs.fc.response.GetServiceResponse;
 import com.aliyuncs.fc.response.GetTriggerResponse;
 import com.aliyuncs.fc.response.InvokeFunctionResponse;
 import com.aliyuncs.fc.response.ListAliasesResponse;
 import com.aliyuncs.fc.response.ListCustomDomainsResponse;
 import com.aliyuncs.fc.response.ListFunctionsResponse;
+import com.aliyuncs.fc.response.ListProvisionConfigsResponse;
 import com.aliyuncs.fc.response.ListServicesResponse;
 import com.aliyuncs.fc.response.ListTriggersResponse;
 import com.aliyuncs.fc.response.ListVersionsResponse;
 import com.aliyuncs.fc.response.PublishVersionResponse;
+import com.aliyuncs.fc.response.PutProvisionConfigResponse;
 import com.aliyuncs.fc.response.UpdateAliasResponse;
 import com.aliyuncs.fc.response.UpdateCustomDomainResponse;
 import com.aliyuncs.fc.response.UpdateFunctionResponse;
@@ -492,6 +498,39 @@ public class FunctionComputeClient {
         listVersionsResponse.setContent(response.getContent());
         listVersionsResponse.setStatus(response.getStatus());
         return listVersionsResponse;
+    }
+
+    public PutProvisionConfigResponse putProvisionConfig(PutProvisionConfigRequest request)
+            throws ClientException, ServerException {
+        HttpResponse response = client.doAction(request, CONTENT_TYPE_APPLICATION_JSON, PUT);
+        PutProvisionConfigResponse putProvisionConfigResponse = GSON.fromJson(
+                new String(response.getContent()), PutProvisionConfigResponse.class);
+        putProvisionConfigResponse.setHeaders(response.getHeaders());
+        putProvisionConfigResponse.setContent(response.getContent());
+        putProvisionConfigResponse.setStatus(response.getStatus());
+        return putProvisionConfigResponse;
+    }
+
+    public GetProvisionConfigResponse getProvisionConfig(GetProvisionConfigRequest request)
+            throws ClientException, ServerException {
+        HttpResponse response = client.doAction(request, CONTENT_TYPE_APPLICATION_JSON, GET);
+        GetProvisionConfigResponse getProvisionConfigResponse = GSON.fromJson(
+                new String(response.getContent()), GetProvisionConfigResponse.class);
+        getProvisionConfigResponse.setHeaders(response.getHeaders());
+        getProvisionConfigResponse.setContent(response.getContent());
+        getProvisionConfigResponse.setStatus(response.getStatus());
+        return getProvisionConfigResponse;
+    }
+
+    public ListProvisionConfigsResponse listProvisionConfigs(ListProvisionConfigsRequest request)
+            throws ClientException, ServerException {
+        HttpResponse response = client.doAction(request, CONTENT_TYPE_APPLICATION_JSON, GET);
+        ListProvisionConfigsResponse listProvisionConfigsResponse = GSON.fromJson(
+                new String(response.getContent()), ListProvisionConfigsResponse.class);
+        listProvisionConfigsResponse.setHeaders(response.getHeaders());
+        listProvisionConfigsResponse.setContent(response.getContent());
+        listProvisionConfigsResponse.setStatus(response.getStatus());
+        return listProvisionConfigsResponse;
     }
 
     public InvokeFunctionResponse invokeFunction(InvokeFunctionRequest request)
